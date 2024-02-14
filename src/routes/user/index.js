@@ -31,29 +31,49 @@ UserRouter.get("/profile", (req, res) => {
   res.status(StatusCodes.OK).json({ profile: userProfile });
 });
 
-//  ***PUT REQUESTS***
+// PUT REQUESTS
 UserRouter.put("/profile/update", (req, res) => {
   const { username, userId } = req.body;
+  
+  // Überprüfen, ob alle erforderlichen Parameter mitgegeben wurden
+  if (!username || !userId) {
+    res.status(StatusCodes.BAD_REQUEST).send("Both 'username' and 'userId' are required");
+    return;
+  }
 
+  // Aktualisieren des Benutzerprofils
   const currentUser = profiles.find((item) => item.id === userId);
+  if (!currentUser) {
+    res.status(StatusCodes.NOT_FOUND).send("User not found");
+    return;
+  }
   currentUser.username = username;
 
-  const deletedProfiles = profiles.filter((item) => item.id !== userId);
-  deletedProfiles.push(currentUser);
+  // Aktualisieren der Profildaten in der Datenbank
+  profiles = profiles.map((item) => (item.id === userId ? currentUser : item));
 
-  profiles = deletedProfiles;
-
-  res.json({ updatedProfile: currentUser });
+  res.status(StatusCodes.OK).json({ updatedProfile: currentUser });
 });
 
-//  ***DELETE REQUESTS***
+// DELETE REQUESTS
 UserRouter.delete("/profile", (req, res) => {
   const { userId } = req.body;
 
-  const deletedProfiles = profiles.filter((item) => item.id !== userId);
-  profiles = deletedProfiles;
+  // Überprüfen, ob der Benutzer mitgegeben wurde
+  if (!userId) {
+    res.status(StatusCodes.BAD_REQUEST).send("Parameter 'userId' is required");
+    return;
+  }
 
-  res.json({ deletedUserId: userId });
+  // Löschen des Benutzerprofils
+  const deletedUser = profiles.find((item) => item.id === userId);
+  if (!deletedUser) {
+    res.status(StatusCodes.NOT_FOUND).send("User not found");
+    return;
+  }
+  profiles = profiles.filter((item) => item.id !== userId);
+
+  res.status(StatusCodes.OK).json({ deletedUserId: userId });
 });
 
 module.exports = { UserRouter };
