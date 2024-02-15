@@ -10,29 +10,25 @@ const todos = [
     userId: 1,
     task: "Wäsche waschen",
     isDone: true,
-    dueDate: new Date("2024-03-03"),
   },
   {
     id: 2,
     userId: 1,
     task: "Müll rausbrigen",
     isDone: false,
-    dueDate: new Date("2024-03-03"),
   },
   {
     id: 3,
     userId: 2,
     task: "Tanzen",
     isDone: false,
-    dueDate: new Date("2024-03-03"),
   },
   {
     id: 4,
     userId: 2,
     task: "Auto fahren",
     isDone: true,
-    dueDate: new Date("2024-03-03"),
-  },
+    },
 ];
 // GET REQUESTS
 
@@ -80,12 +76,31 @@ TodosRouter.get("/all", (req, res) => {
 
 // POST REQUEST TO ADD A NEW TODO
 TodosRouter.post("/todo", (req, res) => {
-  const { id, userId, task, dueDate} = req.body;
-  if (!id || !userId || !task || !dueDate) {
-    res.status(StatusCodes.BAD_REQUEST)
-  }
+  const { id, userId, task, isDone} = req.body;
+  let errorMessage = "missing parameter:"
+
+  if (!id) errorMessage += " id";
+  if (!userId) errorMessage += " userId";
+  if (!task) errorMessage += " task";
+  if (!isDone) errorMessage += " isDone";
+
+  console.log("errorMessage:",errorMessage)
+
+  const parsedId = parseInt(id)
+  const parsedUserId = parseInt(userId)
+
+  console.log(parsedId);
+  console.log(parsedUserId)
+
+  if (isNaN(parsedId) || isNaN(parsedUserId)) {
+  return res.status(StatusCodes.BAD_REQUEST).send("one of the parameter is not valid")
+}
+
+  if (!id || !userId || !task || !isDone) {
+    return res.status(StatusCodes.BAD_REQUEST).send(errorMessage)
+  } else {
   todos.push(req.body)
-  res.status(201).json( {message: "Todo created"});
+  return res.status(201).send("Todo created")};
 
 })
 
