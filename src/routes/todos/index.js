@@ -77,21 +77,20 @@ TodosRouter.get("/all", (req, res) => {
 // POST REQUEST TO ADD A NEW TODO
 TodosRouter.post("/todo", (req, res) => {
   const { id, userId, task, isDone} = req.body;
-  let errorMessage = "missing parameter:"
 
+  // check for valid input 
+  const parsedId = parseInt(id); console.log(parsedId);
+  const parsedUserId = parseInt(userId); console.log(parsedUserId);
+  if (isNaN(parsedId) || isNaN(parsedUserId)) {
+  return res.status(StatusCodes.BAD_REQUEST).send("one of the parameter is not valid")
+}
+  // check for missing parameter 
+  let errorMessage = "missing parameter:"
   if (!id) errorMessage += " id";
   if (!userId) errorMessage += " userId";
   if (!task) errorMessage += " task";
   if (!isDone) errorMessage += " isDone";
-
   console.log("errorMessage:",errorMessage)
-
-  const parsedId = parseInt(id); console.log(parsedId);
-  const parsedUserId = parseInt(userId); console.log(parsedUserId);
-
-  if (isNaN(parsedId) || isNaN(parsedUserId)) {
-  return res.status(StatusCodes.BAD_REQUEST).send("one of the parameter is not valid")
-}
 
   if (!id || !userId || !task || !isDone) {
     return res.status(StatusCodes.BAD_REQUEST).send(errorMessage)
