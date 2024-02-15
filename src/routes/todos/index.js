@@ -86,11 +86,8 @@ TodosRouter.post("/todo", (req, res) => {
 
   console.log("errorMessage:",errorMessage)
 
-  const parsedId = parseInt(id)
-  const parsedUserId = parseInt(userId)
-
-  console.log(parsedId);
-  console.log(parsedUserId)
+  const parsedId = parseInt(id); console.log(parsedId);
+  const parsedUserId = parseInt(userId); console.log(parsedUserId);
 
   if (isNaN(parsedId) || isNaN(parsedUserId)) {
   return res.status(StatusCodes.BAD_REQUEST).send("one of the parameter is not valid")
