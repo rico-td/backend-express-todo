@@ -4,8 +4,7 @@ const bodyParser = require("body-parser");
 const { AppRouter } = require("./src/routes");
 
 // Zugriff auf Umgebungsvariablen
-const { PORT } = process.env;
-
+const PORT = process.env;
 // Initialisierung von expres
 const app = express();
 app.use(bodyParser.json());
