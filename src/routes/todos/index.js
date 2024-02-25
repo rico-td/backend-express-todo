@@ -89,9 +89,26 @@ TodosRouter.post("/todo", (req, res) => {
 TodosRouter.put("/mark", (req, res) => {
   res.status(StatusCodes.OK).send("Todo als erledeigt markieren");
 });
+
+// ###########################################
+
 TodosRouter.put("/update", (req, res) => {
+  const { id, newTask, newIsDone, newDueDate } = req.body;
+
+  const todo = todos.find((item) => item.id == id);
+
+  todo.isDone = newIsDone;
+  todo.task = newTask;
+  todo.dueDate = newDate;
+
+  const newTodo = todo.filter((item) => item.id != id);
+
+  newTodo.push(todo);
+
   res.status(StatusCodes.OK).send("Todo aktuallisieren");
 });
+
+// #####################################################
 
 // POST REQUESTS
 TodosRouter.post("/create", (req, res) => {
